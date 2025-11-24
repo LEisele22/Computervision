@@ -1,0 +1,6 @@
+- 25fps sometimes 30 (capped)
+- highly variable 5-28 everthing fps
+- faster when not displayed but not properstatement possible due to high variability
+- matrix for loop and built in function have similar speed
+- latency variable but ca. 1s
+- depends on how many in wifi but quite similar to video camera of laptop
