@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import random
+import time
 
 
 # -----------------------------------------------------
@@ -96,6 +97,8 @@ def main():
         print("Could not open webcam.")
         return
 
+    prev_time = time.time()   # For FPS counter
+
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -103,29 +106,40 @@ def main():
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+        # compute edges
         edges, pts = get_edge_points(gray)
 
+        # FPS calculation
+        curr_time = time.time()
+        fps = 1.0 / (curr_time - prev_time)
+        prev_time = curr_time
+
         # ---------------------------------------------
-        # SHOW ONLY THE CANNY IMAGE (if enabled)
+        # SHOW ONLY THE CANNY IMAGE
         # ---------------------------------------------
         if SHOW_CANNY:
-            cv2.imshow("Canny Edges", edges)
+            fps_frame = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+            cv2.putText(fps_frame, f"FPS: {fps:.1f}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
+            cv2.imshow("Canny Edges", fps_frame)
             if cv2.waitKey(1) == ord('q'):
                 break
             continue
 
         # ---------------------------------------------
-        # SHOW ONLY EDGE PIXELS (no RANSAC)
+        # SHOW ONLY EDGE PIXELS
         # ---------------------------------------------
         if SHOW_EDGES_ONLY:
             edge_only = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+            cv2.putText(edge_only, f"FPS: {fps:.1f}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,255), 2)
             cv2.imshow("Edges Only", edge_only)
             if cv2.waitKey(1) == ord('q'):
                 break
             continue
 
         # ---------------------------------------------
-        # FULL RANSAC LINE DETECTION PIPELINE
+        # FULL RANSAC LINE DETECTION
         # ---------------------------------------------
         model, mask = ransac_line(pts)
         out = frame.copy()
@@ -136,8 +150,12 @@ def main():
                 cv2.line(out, p1, p2, (0,255,0), 2)
 
             # Draw inlier points
-            for (x,y) in pts[mask]:
-                cv2.circle(out, (int(x),int(y)), 1, (0,0,255), -1)
+            for (x, y) in pts[mask]:
+                cv2.circle(out, (int(x), int(y)), 1, (0, 0, 255), -1)
+
+        # Draw FPS on video
+        cv2.putText(out, f"FPS: {fps:.1f}", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
 
         cv2.imshow("Prominent Line Detection", out)
 
