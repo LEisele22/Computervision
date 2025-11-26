@@ -2,3 +2,5 @@
 *.png
 *.jpg
 *.jpeg
+# Ignore COCO dataset folder
+datasets/coco/
