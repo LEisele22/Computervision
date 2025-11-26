@@ -20,6 +20,7 @@ def find_reddest(image_bgr):
     red_score = r.astype(int) - np.maximum(g, b).astype(int)
     
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(red_score)
+    print("Max red score:", max_val)
     return max_loc  # (x, y)
 
 def find_brightest_for_loop(gray):
@@ -59,17 +60,17 @@ while True:
     # Convert to grayscale for brightness detection
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # 1) Brightest spot (OpenCV)
-    bright_spot = find_brightest_opencv(gray)
-    cv2.circle(frame, bright_spot, 10, (255, 255, 0), 2)
+    # # 1) Brightest spot (OpenCV)
+    # bright_spot = find_brightest_opencv(gray)
+    # cv2.circle(frame, bright_spot, 10, (255, 255, 0), 2)
 
-    # 2) Reddest spot
-    red_spot = find_reddest(frame)
-    cv2.circle(frame, red_spot, 10, (0, 0, 255), 2)
+    # # 2) Reddest spot
+    # red_spot = find_reddest(frame)
+    # cv2.circle(frame, red_spot, 10, (255, 0, 255), 2)
 
-    # 3) Brightest spot (double for-loop)
-    loop_spot = find_brightest_for_loop(gray)
-    cv2.circle(frame, loop_spot, 10, (0, 255, 0), 2)
+    # # 3) Brightest spot (double for-loop)
+    # loop_spot = find_brightest_for_loop(gray)
+    # cv2.circle(frame, loop_spot, 20, (0, 255, 0), 2)
 
     # FPS calculation
     fps = 1.0 / (time.time() - start_time)
