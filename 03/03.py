@@ -13,7 +13,7 @@ from datetime import datetime
 # ----------------------------
 MODELS = {
     "1": "models/yolov5n.onnx",   # Modell 1 (klein)
-    "2": "models/yolov5n.onnx",   # Modell 2 (mittel) - passe Pfad an, falls nötig
+    "2": "models/yolov5m.onnx",   # Modell 2 (mittel) - passe Pfad an, falls nötig
 }
 
 IMG_SIZE = 640            # Eingabegröße für das Modell (häufig 640 für yolov5 export)
